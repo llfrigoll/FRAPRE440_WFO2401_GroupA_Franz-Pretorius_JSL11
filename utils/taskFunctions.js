@@ -38,7 +38,7 @@ export const putTask = (id, updatedTask) => {
     tasks[taskIndex] = updatedTask;
     saveTasks(tasks);
   }
-  location.reload(); // Or better, re-render tasks without reloading
+  //location.reload(); // Or better, re-render tasks without reloading
 };
 
 export const deleteTask = (id) => {

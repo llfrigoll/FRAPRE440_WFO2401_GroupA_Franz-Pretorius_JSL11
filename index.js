@@ -268,13 +268,18 @@ function openEditTaskModal(task) {
 
 function saveTaskChanges(taskId) {
   // Get new user inputs
-  
+  let title = document.getElementById("edit-task-title-input").value;
+  let desc = document.getElementById("edit-task-desc-input").value;
+  let status = document.getElementById("edit-select-status").value;
 
   // Create an object with the updated task details
-
+  const taskUpdated = getTasks().filter(task => {return task.id === taskId})[0];
+  taskUpdated.title = title;
+  taskUpdated.description = desc;
+  taskUpdated.status = status;
 
   // Update task using a hlper functoin
- 
+  putTask(taskId, taskUpdated);
 
   // Close the modal and refresh the UI to reflect the changes
   toggleModal(false, elements.editTaskModal);
@@ -288,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function init() {
+  //localStorage.clear()
   initializeData();
   setupEventListeners();
   const showSidebar = localStorage.getItem('showSideBar') === 'true';
