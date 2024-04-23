@@ -56,7 +56,7 @@ function displayBoards(boards) {
     const boardElement = document.createElement("button");
     boardElement.textContent = board;
     boardElement.classList.add("board-btn");
-    boardElement.addEventListener('click', () => { 
+    boardElement.addEventListener('click', () => {
       elements.headerBoardName.textContent = board;
       filterAndDisplayTasksByBoard(board);
       activeBoard = board //assigns active board
@@ -150,8 +150,6 @@ function addTaskToUI(task) {
   refreshTasksUI();
 }
 
-
-
 function setupEventListeners() {
   // Cancel editing task event listener
   const cancelEditBtn = document.getElementById('cancel-edit-btn');
@@ -239,21 +237,32 @@ function toggleTheme() {
   }
 }
 
-
-
 function openEditTaskModal(task) {
   // Set task details in modal inputs
-  
+  const title = document.getElementById("edit-task-title-input");
+  const desc = document.getElementById("edit-task-desc-input");
+  const status = document.getElementById("edit-select-status");
+
+  title.value = task.title;
+  desc.value = task.description;
+  status.value = task.status;
 
   // Get button elements from the task modal
-
+  const saveBtn = document.getElementById("save-task-changes-btn");
+  const cancelBtn = document.getElementById("cancel-edit-btn");
+  const deleteBtn = document.getElementById("delete-task-btn");
 
   // Call saveTaskChanges upon click of Save Changes button
- 
+  saveBtn.addEventListener('click', () => {
+    saveTaskChanges(task.id)
+  });
 
-  // Delete task using a helper function and close the task modal
-
-
+    // Delete task using a helper function and close the task modal
+  deleteBtn.addEventListener('click', () => {
+    deleteTask(task.id)
+    toggleModal(false, elements.editTaskModal);
+    refreshTasksUI()
+  });
   toggleModal(true, elements.editTaskModal); // Show the edit task modal
 }
 
@@ -268,7 +277,7 @@ function saveTaskChanges(taskId) {
  
 
   // Close the modal and refresh the UI to reflect the changes
-
+  toggleModal(false, elements.editTaskModal);
   refreshTasksUI();
 }
 
