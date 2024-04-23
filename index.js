@@ -43,7 +43,6 @@ function fetchAndDisplayBoardsAndTasks() {
     elements.headerBoardName.textContent = activeBoard
     styleActiveBoard(activeBoard)
     refreshTasksUI();
-
   }
 }
 
@@ -155,6 +154,7 @@ function setupEventListeners() {
   const cancelEditBtn = document.getElementById('cancel-edit-btn');
   cancelEditBtn.addEventListener('click', () => {
     toggleModal(false, elements.editTaskModal)
+    elements.filterDiv.style.display = 'none';
   });
 
   // Cancel adding new task event listener
@@ -166,7 +166,8 @@ function setupEventListeners() {
 
   // Clicking outside the modal to close it
   elements.filterDiv.addEventListener('click', () => {
-    toggleModal(false);
+    toggleModal(false, elements.modalWindow);
+    toggleModal(false, elements.editTaskModal);
     elements.filterDiv.style.display = 'none'; // Also hide the filter overlay
   });
 
@@ -249,7 +250,6 @@ function openEditTaskModal(task) {
 
   // Get button elements from the task modal
   const saveBtn = document.getElementById("save-task-changes-btn");
-  const cancelBtn = document.getElementById("cancel-edit-btn");
   const deleteBtn = document.getElementById("delete-task-btn");
 
   // Call saveTaskChanges upon click of Save Changes button
@@ -261,9 +261,11 @@ function openEditTaskModal(task) {
   deleteBtn.addEventListener('click', () => {
     deleteTask(task.id)
     toggleModal(false, elements.editTaskModal);
+    elements.filterDiv.style.display = 'none';
     refreshTasksUI()
   });
-  toggleModal(true, elements.editTaskModal); // Show the edit task modal
+  toggleModal(true, elements.editTaskModal);
+  elements.filterDiv.style.display = 'block'; // Show the edit task modal
 }
 
 function saveTaskChanges(taskId) {
@@ -283,6 +285,7 @@ function saveTaskChanges(taskId) {
 
   // Close the modal and refresh the UI to reflect the changes
   toggleModal(false, elements.editTaskModal);
+  elements.filterDiv.style.display = 'none';
   refreshTasksUI();
 }
 
