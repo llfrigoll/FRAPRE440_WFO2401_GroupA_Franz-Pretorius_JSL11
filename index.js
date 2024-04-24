@@ -221,7 +221,6 @@ function addTask(event) {
     }
 }
 
-
 function toggleSidebar(show) {
   const sidebar = document.querySelector(".side-bar")
   sidebar.style.display = show ? 'block' : 'none';
@@ -252,22 +251,30 @@ function openEditTaskModal(task) {
   const saveBtn = document.getElementById("save-task-changes-btn");
   const deleteBtn = document.getElementById("delete-task-btn");
 
-  // Call saveTaskChanges upon click of Save Changes button
-  saveBtn.addEventListener('click', function saveEdit() {
+  function saveEdit() {
     saveTaskChanges(task.id);
-    saveBtn.removeEventListener('click', saveEdit)
-  });
+    saveBtn.removeEventListener('click', saveEdit);
+    deleteBtn.removeEventListener('click', deleteEdit);
+  }
 
-    // Delete task using a helper function and close the task modal
-  deleteBtn.addEventListener('click', function deleteEdit() {
+  function deleteEdit() {
     deleteTask(task.id);
     toggleModal(false, elements.editTaskModal);
     elements.filterDiv.style.display = 'none';
-    refreshTasksUI()
-    deleteBtn.removeEventListener('click', deleteEdit)
-  });
+    refreshTasksUI();
+    deleteBtn.removeEventListener('click', deleteEdit);
+    saveBtn.removeEventListener('click', saveEdit);
+  }
+
+  // Call saveTaskChanges upon click of Save Changes button
+  saveBtn.addEventListener('click', saveEdit);
+
+    // Delete task using a helper function and close the task modal
+  deleteBtn.addEventListener('click', deleteEdit)
+
   toggleModal(true, elements.editTaskModal);
   elements.filterDiv.style.display = 'block'; // Show the edit task modal
+
 }
 
 function saveTaskChanges(taskId) {
