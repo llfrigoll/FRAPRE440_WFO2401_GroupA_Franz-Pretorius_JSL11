@@ -197,8 +197,9 @@ function setupEventListeners() {
   });
 }
 
-// Toggles tasks modal
+// Toggles modal
 function toggleModal(show, modal = elements.modalWindow) {
+  //Shows or hides the modal
   modal.style.display = show ? 'block' : 'none';
   //Grabs the save and delete button for the edit modal from the DOM
   const saveBtn = document.getElementById("save-task-changes-btn");
