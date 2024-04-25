@@ -30,6 +30,7 @@ const elements = {
   modalWindow: document.querySelector(".modal-window")
 };
 let activeBoard = ""
+let currentTask = {};
 
 // Extracts unique board names from tasks
 // TASK: FIX BUGS
@@ -94,8 +95,9 @@ function filterAndDisplayTasksByBoard(boardName) {
       taskElement.setAttribute('data-task-id', task.id);
 
       // Listen for a click event on each task and open a modal
-      taskElement.addEventListener('click', () => { 
-        openEditTaskModal(task);
+      taskElement.addEventListener('click', () => {
+        currentTask = task
+        openEditTaskModal();
       });
 
       tasksContainer.appendChild(taskElement);
@@ -194,6 +196,12 @@ function setupEventListeners() {
 // Task: Fix bugs
 function toggleModal(show, modal = elements.modalWindow) {
   modal.style.display = show ? 'block' : 'none';
+  const saveBtn = document.getElementById("save-task-changes-btn");
+  const deleteBtn = document.getElementById("delete-task-btn");
+  if((show === false) && (modal === elements.editTaskModal)){
+    deleteClickEventListeners(saveBtn, saveEdit)
+    deleteClickEventListeners(deleteBtn, deleteEdit)
+  }
 }
 
 /*************************************************************************************************************************************************
@@ -237,34 +245,34 @@ function toggleTheme() {
   }
 }
 
-function openEditTaskModal(task) {
+function saveEdit() {
+  saveTaskChanges(currentTask.id);
+}
+
+function deleteEdit() {
+  deleteTask(currentTask.id);
+  toggleModal(false, elements.editTaskModal);
+  elements.filterDiv.style.display = 'none';
+  refreshTasksUI();
+}
+
+function deleteClickEventListeners(element, func) {
+  element.removeEventListener('click', func)
+};
+
+function openEditTaskModal() {
   // Set task details in modal inputs
   const title = document.getElementById("edit-task-title-input");
   const desc = document.getElementById("edit-task-desc-input");
   const status = document.getElementById("edit-select-status");
 
-  title.value = task.title;
-  desc.value = task.description;
-  status.value = task.status;
+  title.value = currentTask.title;
+  desc.value = currentTask.description;
+  status.value = currentTask.status;
 
   // Get button elements from the task modal
   const saveBtn = document.getElementById("save-task-changes-btn");
   const deleteBtn = document.getElementById("delete-task-btn");
-
-  function saveEdit() {
-    saveTaskChanges(task.id);
-    saveBtn.removeEventListener('click', saveEdit);
-    deleteBtn.removeEventListener('click', deleteEdit);
-  }
-
-  function deleteEdit() {
-    deleteTask(task.id);
-    toggleModal(false, elements.editTaskModal);
-    elements.filterDiv.style.display = 'none';
-    refreshTasksUI();
-    deleteBtn.removeEventListener('click', deleteEdit);
-    saveBtn.removeEventListener('click', saveEdit);
-  }
 
   // Call saveTaskChanges upon click of Save Changes button
   saveBtn.addEventListener('click', saveEdit);
